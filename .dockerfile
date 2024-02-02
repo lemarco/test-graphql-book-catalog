@@ -1,5 +1,7 @@
 FROM node:20-alpine
 WORKDIR /app
+COPY prisma /app/
+
 COPY ./*.json /app/
 COPY src /app/src
 COPY ./.env /app/.env

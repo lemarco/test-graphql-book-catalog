@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+
+  logLevel = "query"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("BOOK_CATALOG_DB_URL")
+}
+
+model Author {
+  id         String       @id @default(uuid()) @db.Uuid
+  firstName  String
+  lastName   String
+  BookAuthor BookAuthor[]
+  books      Book[]       @relation("AuthorToBook")
+}
+
+model Book {
+  id         String       @id @default(uuid()) @db.Uuid
+  title      String
+  BookAuthor BookAuthor[]
+  authors    Author[]     @relation("AuthorToBook")
+}
+
+model BookAuthor {
+  bookId   String @map("book_id") @db.Uuid
+  authorId String @map("author_id") @db.Uuid
+  author   Author @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  book     Book   @relation(fields: [bookId], references: [id])
+
+  @@id([bookId, authorId])
+}

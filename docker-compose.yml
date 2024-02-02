@@ -2,15 +2,17 @@ version: '3.9'
 
 services:
   backend-app:
-    container_name: graphql-book-catalog-server
+    container_name: ${BOOK_CATALOG_SERVICE_HOST}
     ports:
-      - ${PORT}:${PORT}
+      - ${BOOK_CATALOG_SERVICE_PORT}:${BOOK_CATALOG_SERVICE_PORT}
     restart: on-failure
     build:
       dockerfile: ./.dockerfile
     env_file:
-      - ./env
-  articles_events_db:
+      - .env
+    depends_on:
+      - blog-catalog-db
+  blog-catalog-db:
     container_name: ${BOOK_CATALOG_DB_HOST}
     restart: always
     image: postgres:16.1-alpine
@@ -23,3 +25,5 @@ services:
       - ${BOOK_CATALOG_DB_PORT}:${BOOK_CATALOG_DB_PORT}
     volumes:
       - ${PWD}/data/book_catalog_db/:/var/lib/postgresql/data
+    env_file:
+      - .env

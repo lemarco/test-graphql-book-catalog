@@ -6,7 +6,8 @@ import { join } from 'path';
 import { AuthorsModule } from './authors/module';
 import { BooksModule } from './books/module';
 import * as joi from 'joi';
-
+// import DataLoader from 'dataloader'; For n+1  batch load
+// import { createComplexityLimitRule } from 'graphql-validation-complexity'; query complexity middleware handler
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +23,7 @@ import * as joi from 'joi';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      path: '/api/graphql',
     }),
     AuthorsModule,
     BooksModule,
